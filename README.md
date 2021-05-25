@@ -7,6 +7,7 @@ Version 1.0 (May 25th 2021)
 
 - hla-mapper 4 (www.castelli-lab.net/apps/hla-mapper) 
 - GATK 4 (https://gatk.broadinstitute.org/hc/en-us)
+- GATK 3.8 or WhatsHap (https://whatshap.readthedocs.io/en/latest/)
 - vcfx 2 (www.castelli-lab.net/apps/vcfx)
 - phasex 0.8.2 (https://github.com/erickcastelli/phasex)
 - samtools 1.12 (http://samtools.sourceforge.net)
@@ -56,6 +57,9 @@ Now, you can genotype your GVCF using GATK GenotypeGVCFs, as follows:
 
 You need to ajust the amont of memory (in this case, 32Gb), the path for the reference genome (reference_genome), the path for the single GVCF file (output_folder/All_samples.MHC.g.vcf), the output folder (output_folder), and the path to dbsnp (path_to_dbsnp_vcf). dbSNP is optional.
 
+'''
+- attention
+
 ## STEP 4 - Variant refinement
 There are many ways to proceed with variant refinement, i.e., the removal of artifacts, including GATK VQRS and vcfx. For HLA genes, we recommend vcfx.
 
@@ -77,6 +81,16 @@ Use vcfx to filter out artifacts and variants with too many missing alleles, as 
 
 The last VCF file contains only the variants that have passed the vcfx checkpl/evidence algorithm.
 
+## STEP 5 - Convert your multi-allelic VCF file to bi-allelic VCF
+By using bcftools, convert your multi-allelic VCF to bi-allelic VCF.
 
-## STEP 5 - Haplotype calls
+>bcftools norm -m-any VCF_FILE > Biallelic_VCF_FILE.
 
+## STEP 6 - Calling phasing sets directly from the sequencing data
+In this step, we will infer phase sets (micro haplotypes) directly from the sequencing data. For that, there are two options: ReadBackedPhasing grom GATK 3.8, or WhatsHap. Both methods work well, but here we will address only the ReadBackedPhasing.
+
+To use ReadBackedPhasing and parallelize runs in different cores, please use the support script of phasex (https://github.com/erickcastelli/phasex)
+
+Copy all hla-mapper BAM files and their indexes to the same folder. Then, the script will split your VCF files, one for each sample, run ReadBackedPhasing in parallel, and join all files in a single VCF.
+
+After that, the phased VCF file contains phase sets in the HP format. These phase sets will be considered in the haplotyping procedure.

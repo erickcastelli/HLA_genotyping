@@ -3,6 +3,8 @@ Tutorial for genotyping, haplotyping, and allele calls for HLA genes
 
 Version 1.0 (May 25th, 2021)
 
+The advantage of this method is that it calls variants, haplotypes, and then HLA alleles from the phased VCF. Thus, you have many different levels of information.
+
 ## Packages and software needed
 
 - hla-mapper 4 (www.castelli-lab.net/apps/hla-mapper) 
@@ -83,31 +85,41 @@ Use vcfx to filter out artifacts and variants with too many missing alleles, as 
 > vcfx evidence input=VCF_FILE.pl.trim.vcf (this will create a .pl.trim.evid.vcf)
 > 
 > vcfx filter input=VCF_FILE.pl.trim.evid.vcf tag=PASS,WARN (this will create a .pl.trim.evid.filter.vcf)
+>
+> vcftools --vcf VCF_FILE.pl.trim.evid.filter.vcf --recode --out NEW_VCF
 
 The last VCF file contains only the variants that have passed the vcfx checkpl/evidence algorithm.
 
 ```diff
-- Attention: In this step, you should manually check your VCF file.
+- Attention: In this step, you should manually check your VCF file and remove possible artifacts that may have passed the vcfx workflow.
 ```
 
 ### Attention: We recommend performing the next steps for each gene separately. For that, you need to extract from the VCF the variants overlapping the gene you are interested, and perform the next steps. You can use vcftools for that.
 
-## STEP 5 - Calling phasing sets directly from the sequencing data
+## STEP 6 - Normalize your multi-allelic VCF to biallelic VCF
+> bcftools norm -m-any VCF > BIALLELIC.VCF
+
+## STEP 7 - Calling phasing sets directly from the sequencing data
 In this step, we will infer phase sets (micro haplotypes) directly from the sequencing data. For that, there are two options: ReadBackedPhasing grom GATK 3.8, or WhatsHap. Both methods work well, but here we will address only the ReadBackedPhasing.
 
 To use ReadBackedPhasing and parallelize runs in different cores, please use the support script of phasex (https://github.com/erickcastelli/phasex)
 
-Copy all hla-mapper BAM files and their indexes to the same folder. Then, the script will split your VCF files, one for each sample, run ReadBackedPhasing in parallel, and join all files in a single VCF.
+Copy all hla-mapper BAM files and their indexes to the same folder. Then, run the script as indicated. The script will split your VCF files, one for each sample, run ReadBackedPhasing in parallel, and join all files in a single VCF. The input for the script in the BIALLELIC.VCF file.
 
 After that, the phased VCF file contains phase sets in the HP format. These phase sets will be considered in the haplotyping procedure.
 
-## STEP 6 - Calling haplotypes
+## STEP 8 - Removing unphased singletons
+
+
+
+## STEP 9 - Calling haplotypes
 We will use phasex to call haplotypes. Please check https://github.com/erickcastelli/phasex for instructions in how to do it.
 
 For each gene, run:
 
-> phasex hp-ps vcf=VCF_PRODUCED_BY_READBACKEDPHASING output=NEW_VCF
+> phasex hp-ps vcf=VCF_PRODUCED_BY_READBACKEDPHASING output=NEW_PS_VCF
 
-> phasex phase-ps replicates=20 threads=number_of_threads select=0.51 threshold=0.9
+> phasex phase-ps vcf=NEW_PS_VCF
+
 
 

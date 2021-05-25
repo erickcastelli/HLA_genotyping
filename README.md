@@ -13,6 +13,7 @@ Version 1.0 (May 25th 2021)
 - BWA 0.7.17 (https://sourceforge.net/projects/bio-bwa/files/)
 - bcftools 1.12 (http://samtools.github.io/bcftools/)
 - vcftools (http://vcftools.sourceforge.net)
+- IGV (https://software.broadinstitute.org/software/igv/)
 
  
 ## STEP 1A (IF YOU WANT TO ALSO GENOTYPE INTERGENIC VARIANTS): 
@@ -26,10 +27,19 @@ Version 1.0 (May 25th 2021)
 > 
 > samtools index sample.bam
 > 
-> hla-mapper dna bam=sample.bam db=hla_mapper_database sample=Sample_Name
-
+> hla-mapper dna bam=sample.bam db=hla_mapper_database sample=Sample_Name output=output_folder
+- You need to repeat this last part for each sample.
+- You need to indicate a different output folder for each sample
 
 ## STEP 1B (IF YOU WILL GENOTYPE ONLY THE HLA GENES): 
-> hla-mapper dna r1=R1.fastq.gz r2=R2.fastq.gz db=hla_mapper_database sample=Sample_Name
+> hla-mapper dna r1=R1.fastq.gz r2=R2.fastq.gz db=hla_mapper_database sample=Sample_Name output=output_folder
+- You need to repeat this last part for each sample.
+- You need to indicate a different output folder for each sample
+
+## STEP 2 - Check some of the hla-mapper BAM files using IGV 
+Using IGV, please check some of the hla-mapper outputed BAM files (Sample_Name.adjusted.bam) using IGV.
+
+## STEP 3 - Variant call using GATK 4
+Using IGV, please check some of the hla-mapper outputed BAM files (Sample_Name.adjusted.bam) using IGV.
 
 

@@ -56,5 +56,27 @@ Now, you can genotype your GVCF using GATK GenotypeGVCFs, as follows:
 
 You need to ajust the amont of memory (in this case, 32Gb), the path for the reference genome (reference_genome), the path for the single GVCF file (output_folder/All_samples.MHC.g.vcf), the output folder (output_folder), and the path to dbsnp (path_to_dbsnp_vcf). dbSNP is optional.
 
+## STEP 4 - Variant refinement
+There are many ways to proceed with variant refinement, i.e., the removal of artifacts, including GATK VQRS and vcfx. For HLA genes, we recommend vcfx.
 
+Recode the VCF file using vcftools. This is important for the next steps.
+
+> vcftools --vcf VCF_FILE --recode --out OUTPUT_FOLDER/VCF_FILE
+
+Using any application or script you want, please change any "|" allele separator for "/" in the recoded VCF file.
+
+Use vcfx to filter out artifacts and variants with too many missing alleles, as follows. Please check the vcfx manual to understand out is going on here (www.castelli-lab.net/apps/vcfx)
+
+> vcfx checkpl input=VCF_FILE (this will create a .pl.vcf file next to the original VCF)
+> 
+> bcftools view --trim-alt-alleles --min-ac 1 VCF_FILE.pl.vcf > VCF_FILE.pl.trim.vcf
+> 
+> vcfx evidence input=VCF_FILE.pl.trim.vcf (this will create a .pl.trim.evid.vcf)
+> 
+> vcfx filter input=VCF_FILE.pl.trim.evid.vcf tag=PASS,WARN (this will create a .pl.trim.evid.filter.vcf)
+
+The last VCF file contains only the variants that have passed the vcfx checkpl/evidence algorithm.
+
+
+## STEP 5 - Haplotype calls
 

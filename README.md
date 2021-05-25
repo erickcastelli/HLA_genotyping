@@ -47,6 +47,10 @@ For each sample, run GATK HaplotypeCaller in the GVCF mode, such as this example
 
 > java -Xmx32g -jar gatk-package-4.2.0.0-local.jar HaplotypeCaller -R reference_genome -I Sample_name.adjusted.bam -O output_folder/Sample_name.MHC.g.vcf -L chr6:29700000-33150000 -ERC GVCF --max-num-haplotypes-in-population 256 --native-pair-hmm-threads thread_number --allow-non-unique-kmers-in-ref TRUE
 
+```diff
+- Attention: If you are interested only in one gene (e.g., HLA-A), you should adjust the interval accordingly.
+```
+
 You need to ajust the amont of memory (in this case, 32Gb), the path for the reference genome (reference_genome), the path for the hla-mapper output BAM (Sample_name.adjusted.bam), the output folder (output_folder), the sample name, and the number of threads (thread_number).
 
 After processing all your samples, you need to concatenate all G.VCF files in a single one. There are two ways to do that, depending on the number of samples. The most commom one is using GATK CombineGVCFs (https://gatk.broadinstitute.org/hc/en-us/articles/360037053272-CombineGVCFs). The other is GenomicsDBImport (https://gatk.broadinstitute.org/hc/en-us/articles/360036883491-GenomicsDBImport). This tutorial does not cover this issue. Please follow the GATK instructions and combine all GVCFS in a single file.
@@ -57,8 +61,9 @@ Now, you can genotype your GVCF using GATK GenotypeGVCFs, as follows:
 
 You need to ajust the amont of memory (in this case, 32Gb), the path for the reference genome (reference_genome), the path for the single GVCF file (output_folder/All_samples.MHC.g.vcf), the output folder (output_folder), and the path to dbsnp (path_to_dbsnp_vcf). dbSNP is optional.
 
-'''
-- attention
+```diff
+- Attention: If you are interested only in one gene (e.g., HLA-A), you should adjust the interval accordingly.
+```
 
 ## STEP 4 - Variant refinement
 There are many ways to proceed with variant refinement, i.e., the removal of artifacts, including GATK VQRS and vcfx. For HLA genes, we recommend vcfx.
@@ -81,12 +86,13 @@ Use vcfx to filter out artifacts and variants with too many missing alleles, as 
 
 The last VCF file contains only the variants that have passed the vcfx checkpl/evidence algorithm.
 
-## STEP 5 - Convert your multi-allelic VCF file to bi-allelic VCF
-By using bcftools, convert your multi-allelic VCF to bi-allelic VCF.
+```diff
+- Attention: In this step, you should manually check your VCF file.
+```
 
->bcftools norm -m-any VCF_FILE > Biallelic_VCF_FILE.
+### Attention: We recommend to perform the next steps for each gene separatedly. For that, you need to extract from the VCF the variants overlapping the gene you are interested for, and than perform the next steps. You can use vcftools for that.
 
-## STEP 6 - Calling phasing sets directly from the sequencing data
+## STEP 5 - Calling phasing sets directly from the sequencing data
 In this step, we will infer phase sets (micro haplotypes) directly from the sequencing data. For that, there are two options: ReadBackedPhasing grom GATK 3.8, or WhatsHap. Both methods work well, but here we will address only the ReadBackedPhasing.
 
 To use ReadBackedPhasing and parallelize runs in different cores, please use the support script of phasex (https://github.com/erickcastelli/phasex)
@@ -94,3 +100,7 @@ To use ReadBackedPhasing and parallelize runs in different cores, please use the
 Copy all hla-mapper BAM files and their indexes to the same folder. Then, the script will split your VCF files, one for each sample, run ReadBackedPhasing in parallel, and join all files in a single VCF.
 
 After that, the phased VCF file contains phase sets in the HP format. These phase sets will be considered in the haplotyping procedure.
+
+## STEP 6 - Calling haplotypes
+
+

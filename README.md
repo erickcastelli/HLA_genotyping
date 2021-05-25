@@ -102,5 +102,13 @@ Copy all hla-mapper BAM files and their indexes to the same folder. Then, the sc
 After that, the phased VCF file contains phase sets in the HP format. These phase sets will be considered in the haplotyping procedure.
 
 ## STEP 6 - Calling haplotypes
+We will use phasex to call haplotypes. Please check https://github.com/erickcastelli/phasex for instructions in how to do it.
+
+For each gene, run:
+
+> phasex hp-ps vcf=VCF_PRODUCED_BY_READBACKEDPHASING output=NEW_VCF
+
+> phasex phase-ps replicates=20 threads=number_of_threads select=0.51 threshold=0.9
+
 
 

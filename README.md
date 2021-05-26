@@ -97,8 +97,11 @@ Use vcfx to filter out artifacts and variants with too many missing alleles, as 
 
 The last VCF file contains only the variants that have passed the vcfx checkpl/evidence workflow. For now on, we will refer to this VCF file as "VCF".
 
+
+
 ```diff
 - Attention: In this step, you should manually check your VCF file and remove possible artifacts that may have passed the vcfx workflow.
++ Please note that the VCF generated up to this step is suitable for association studies and other purposes, but it consists of unphased genotypes with some missing alleles.
 ```
 
 ***Attention: We recommend performing the next steps for each gene separately. For that, you need to extract from the VCF the variants overlapping the gene you are interested, and perform the next steps. You can use vcftools for that, indicating the intervals with --from-bp and --to-bp. You may also try this pipiline with all variants together, but this decreases accuracy for detecting HLA alleles***
@@ -107,16 +110,21 @@ The last VCF file contains only the variants that have passed the vcfx checkpl/e
 > bcftools norm -m-any VCF > BIALLELIC.VCF
 
 ## STEP 7 - Calling phasing sets directly from the sequencing data
-In this step, we will infer phase sets (micro haplotypes) directly from the sequencing data. For that, there are two options: ReadBackedPhasing grom GATK 3.8, or WhatsHap. Both methods work well, but here we will address only the ReadBackedPhasing.
+In this step, we will infer phase sets (the micro haplotypes) directly from the sequencing data. For that, there are two options: ReadBackedPhasing grom GATK 3.8, or WhatsHap. Both methods work well, but here we will address only the ReadBackedPhasing method.
 
-To use ReadBackedPhasing and parallelize runs in different cores, please use the support script of phasex (https://github.com/erickcastelli/phasex)
+To use ReadBackedPhasing and parallelize runs in different cores, please use the support script from phasex (https://github.com/erickcastelli/phasex). You should get familiar with phasex to understang how to do it, but it is a simple task using a Perl script. The script will split your VCF files, one for each sample, run ReadBackedPhasing in parallel, and join all files in a single VCF. 
 
-Copy all hla-mapper BAM files and their indexes to the same folder. Then, run the script as indicated. The script will split your VCF files, one for each sample, run ReadBackedPhasing in parallel, and join all files in a single VCF. The input for the script in the BIALLELIC.VCF file.
+The input for this step is the BIALLELIC.VCF file.
 
-After that, the phased VCF file contains phase sets in the HP format. These phase sets will be considered in the haplotyping procedure.
+After that, the VCF file produced by the script (BIALLELIC.RBP.VCF) contains phase sets in the HP format. These phase sets will be considered in the upcoming haplotyping procedure.
+
 
 ## STEP 8 - Removing unphased singletons
+Shapeit4, which is used combined with phasex to call haplotypes, or any probabilistic method for haplotyping, does not handle properly unphased singletons. Singletons are variants that have occurred in just one sample in heterozygosis. Thus, we need to remove them to proceed to the next step.
 
+To do that, we can use script /support/remove_unphased_singleton_from_normalized_rbp.pl
+
+This method will remove from your BIALLELIC.RBP.VCF file all unphased singletons, producing 3 files: one VCF without singletons (BIALLELIC.RBP.NOSINGLETON.VCF), a separate file with the unphased singletons (BIALLELIC.RBP.unphased_singletons.VCF), and a log file. Please keep all these files.
 
 
 ## STEP 9 - Calling haplotypes

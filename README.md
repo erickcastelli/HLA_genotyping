@@ -9,7 +9,7 @@ The advantage of this method is that it calls variants, haplotypes, and then HLA
 
 This tutorial is suitable for whole-genome sequencing (WGS), whole-exome sequencing (WES), and amplicon sequencing. It has been tested with Illumina and Ion sequencing data. Please note that coverage is essential. We recommend a coverage of at least 30x for WGS, and 100x for WES and amplicons. Read size is also important, and you will get better results when dealing with a read size larger than 75 nucleotides.
 
-This procedure needs sample size. We minimum sample size we have tested in 150 samples. For a single-sample allele call, please use another method (such as HLA-LA). However, if you have a large sample size, this procedure is highly accurate and will provide you with SNPs (in the hg38 reference genome), haplotypes, and allele calls, and allow you to detect new variants.
+This procedure needs sample size. The minimum sample size we have tested in 150 samples. For a single-sample allele call, please use another method (such as HLA-LA). However, if you have a large sample size, this procedure is highly accurate and will provide you with SNPs (in the hg38 reference genome), haplotypes, and allele calls, and allow you to detect new variants.
 
 ## How to cite this pipeline
 This pipeline is described in:

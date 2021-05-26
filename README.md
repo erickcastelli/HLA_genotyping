@@ -1,12 +1,20 @@
 # HLA Genotypingm haplotyping, and allele calls from next-generation sequencing
-Tutorial for genotyping, haplotyping, and allele calls for HLA genes
+Tutorial for genotyping, haplotyping, and allele calling for HLA genes
 
 Version 1.0 (May 25th, 2021)
 
 The advantage of this method is that it calls variants, haplotypes, and then HLA alleles from the phased VCF. Thus, you have many different levels of information.
 
-## Packages and software needed
+This tutorial is suitable for whole-genome sequencing (WGS), whole-exome sequencing (WES), and amplicon sequencing. It has been tested with Illumina and Ion sequencing data. Please note that coverage is essential. We recommend a coverage of at least 30x for WGS, and 100x for WES and amplicons. Read size is also important, and you will get better results when dealing with a read size larger than 75 nucleotides.
 
+## How to cite this pipeline
+This pipeline is described in:
+
+Hla-C genetic diversity and evolutionary insights in two samples from Brazil and Benin. HLA. 2020 Oct;96(4):468-486. doi: 10.1111/tan.13996
+
+Immunogenetics of resistance to SARS-CoV-2 infection in discordant couples. medRxiv, doi: 10.1101/2021.04.21.21255872
+
+## Packages and software needed
 - hla-mapper 4 (www.castelli-lab.net/apps/hla-mapper) 
 - GATK 4 (https://gatk.broadinstitute.org/hc/en-us)
 - GATK 3.8 or WhatsHap (https://whatshap.readthedocs.io/en/latest/)

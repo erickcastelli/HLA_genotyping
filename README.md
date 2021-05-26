@@ -3,6 +3,8 @@ Tutorial for genotyping, haplotyping, and allele calling for HLA genes
 
 Version 1.0 (May 25th, 2021)
 
+Author: Erick C. Castelli (erick.castelli@unesp.br)
+
 The advantage of this method is that it calls variants, haplotypes, and then HLA alleles from the phased VCF. Thus, you have many different levels of information.
 
 This tutorial is suitable for whole-genome sequencing (WGS), whole-exome sequencing (WES), and amplicon sequencing. It has been tested with Illumina and Ion sequencing data. Please note that coverage is essential. We recommend a coverage of at least 30x for WGS, and 100x for WES and amplicons. Read size is also important, and you will get better results when dealing with a read size larger than 75 nucleotides.

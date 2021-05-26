@@ -122,7 +122,7 @@ After that, the VCF file produced by the script (BIALLELIC.RBP.VCF) contains pha
 ## STEP 8 - Removing unphased singletons
 Shapeit4, which is used combined with phasex to call haplotypes, or any probabilistic method for haplotyping, does not handle properly unphased singletons. Singletons are variants that have occurred in just one sample in heterozygosis. Thus, we need to remove them to proceed to the next step.
 
-To do that, we can use script /support/remove_unphased_singleton_from_normalized_rbp.pl
+**To do that, we can use script /support/remove_unphased_singleton_from_normalized_rbp.pl**
 
 This method will remove from your BIALLELIC.RBP.VCF file all unphased singletons, producing 3 files: one VCF without singletons (BIALLELIC.RBP.NOSINGLETON.VCF), a separate file with the unphased singletons (BIALLELIC.RBP.unphased_singletons.VCF), and a log file. Please keep all these files.
 
@@ -130,11 +130,19 @@ This method will remove from your BIALLELIC.RBP.VCF file all unphased singletons
 ## STEP 9 - Calling haplotypes
 We will use phasex to call haplotypes. Please check https://github.com/erickcastelli/phasex for instructions in how to do it.
 
-For each gene, run:
+For each gene and after removing the unphased singletons, run:
 
-> phasex hp-ps vcf=VCF_PRODUCED_BY_READBACKEDPHASING output=NEW_PS_VCF
+> phasex hp-ps vcf=BIALLELIC.RBP.NOSINGLETON.VCF output=BIALLELIC.RBP.NOSINGLETON.PS.VCF
 
-> phasex phase-ps vcf=NEW_PS_VCF
+The command above will convert the HP format (from ReadBackedPhasing) to the PS format, which is compatible with phasex.
+
+To proceed to the haplotyping step, run:
+
+> phasex phase-ps vcf=BIALLELIC.RBP.NOSINGLETON.PS.VCF select=0.51
+
+The command above will perform a phasex run with the default parameters, i.e., 50 iterations, 50 replicates, using half the number of cores in the machine, using a threshold to fix a haplotype of 95%, and selecting all samples in which the same haplotype pair is present in at least 51% of the final runs.
+
+
 
 
 

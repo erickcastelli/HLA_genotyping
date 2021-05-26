@@ -142,7 +142,12 @@ To proceed to the haplotyping step, run:
 
 The command above will perform a phasex run with the default parameters, i.e., 50 iterations, 50 replicates, using half the number of cores in the machine, using a threshold to fix a haplotype of 95%, and selecting all samples in which the same haplotype pair is present in at least 51% of the final runs.
 
+The final VCF file (in the phasex output folder, file results.vcf) is a phased VCF with the haplotypes for samples that present a haplotype with a empirical P value higher than 51%. You may adjust that according to your needs. Please check the phasex manual for details. 
 
+```diff
++ Please note that the phased VCF generated up to this step is suitable for association studies and other purposes. For example, you can call HLA alleles, or you can convert it to a phased ARLEQUIN file (using vcfx arlequin).
+```
 
+## STEP 10 - Introducing unphased singletons (optional)
 
 

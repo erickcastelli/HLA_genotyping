@@ -150,4 +150,14 @@ The final VCF file (in the phasex output folder, file results.vcf) is a phased V
 
 ## STEP 10 - Introducing unphased singletons (optional)
 
+This step is optional. This procedure will reintroduce the unphased singletons, that they will be recorded as unphased genotypes.
+
+These unphased genotypes are not considered when we export complete sequences and call HLA alleles in the next step.
+
+**To reintroduce unphased singletons, use the script /support/insert_singletons_back_to_phased_data.pl**
+
+
+## STEP 11 - Calling complete sequences and HLA alleles
+
+
 

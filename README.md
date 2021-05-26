@@ -18,8 +18,14 @@ The advantage of this method is that it calls variants, haplotypes, and then HLA
 - vcftools (http://vcftools.sourceforge.net)
 - IGV (https://software.broadinstitute.org/software/igv/)
 
+## STEP 1: Using hla-mapper to get unbiased rad mapping for HLA genes
+This step is essential. You won't retrieve correct genotypes in HLA genes unless using a method tailored for these genes. We recommend the use of hla-mapper.
+
+hla-mapper supports many genes in the MHC region. Please check its website for instructions (www.castelli-lab.net/apps/hla-mapper)
+
+There are two possible inputs for hla-mapper, a BAM file (step 1a), or FASTQ files (step 1b).
  
-## STEP 1A (IF YOU WANT ALSO TO GENOTYPE INTERGENIC VARIANTS): 
+### STEP 1A (IF YOU WANT ALSO TO GENOTYPE INTERGENIC VARIANTS): 
 - Download a copy of the human reference genome (hg38) and prepare it for BWA. We recommend the use of a reference genome without the alternative contigs.
 - Prepare it for BWA:
 > bwa index reference_genome
@@ -34,13 +40,14 @@ The advantage of this method is that it calls variants, haplotypes, and then HLA
 - You need to repeat this last part for each sample.
 - You need to indicate a different output folder for each sample
 
-## STEP 1B (IF YOU WILL GENOTYPE ONLY THE HLA GENES): 
+
+### STEP 1B (IF YOU WILL GENOTYPE ONLY THE HLA GENES): 
 > hla-mapper dna r1=R1.fastq.gz r2=R2.fastq.gz db=hla_mapper_database sample=Sample_Name output=output_folder
 - You need to repeat this last part for each sample.
 - You need to indicate a different output folder for each sample
 
 ## STEP 2 - Check some of the hla-mapper BAM files using IGV 
-Using IGV, please check some of the hla-mapper outputted BAM files (Sample_Name.adjusted.bam) using IGV.
+Using IGV, please check some of the hla-mapper outputted BAM files (Sample_Name.adjusted.bam) using IGV. Make sure everything is OK. You can compare the original BAM (using BWA MEM) with the new one (using hla-mapper).
 
 ## STEP 3 - Variant call using GATK 4
 We recommend GATK 4 HaplotypeCaller to call variants. The hla-mapper BAM file is already prepared for GATK.
@@ -68,13 +75,14 @@ You need to ajust the amont of memory (in this case, 32Gb), the path for the ref
 ```
 
 ## STEP 4 - Variant refinement
-There are many ways to proceed with variant refinement, i.e., removing artifacts, including GATK VQRS and vcfx. For HLA genes, we recommend vcfx.
+There are many ways to proceed with variant refinement, i.e., removing artifacts, including GATK VQRS (very good for full genomes and exomes) and vcfx (better for small datasets). For HLA genes, we recommend vcfx.
 
-Recode the VCF file using vcftools. This is important for the next steps.
+Recode the VCF file using vcftools. This is important for the next steps to correct some minor encoding errors introduced by GATK.
 
-> vcftools --vcf VCF_FILE --recode --out OUTPUT_FOLDER/VCF_FILE
+> vcftools --vcf VCF_FILE --recode --out OUTPUT_FOLDER/VCF_FILE_ENCODED
 
-Using any application or script you want, please change any "|" allele separator for "/" in the recoded VCF file.
+Using any application or script you want, please change any "|" allele separator for "/" in the recoded VCF file. 
+
 
 Use vcfx to filter out artifacts and variants with too many missing alleles, as follows. Please check the vcfx manual to understand out is going on here (www.castelli-lab.net/apps/vcfx)
 

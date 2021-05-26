@@ -172,5 +172,18 @@ These unphased genotypes are not considered when we export complete sequences an
 ## STEP 11 - Calling complete sequences and HLA alleles
 For this step, we will generate complete sequences for each HLA gene, and compare this sequences with known ones from the IPD-IMGT/HLA database.
 
+**You need to use the script /support/allele_calling/export_count_translate_name_v3.pl**
 
+> perl export_count_translate_name_v3.pl
 
+-v [vcf file]
+-o [output folder]
+-t [tag, file prefix]
+-c [cds fasta file]
+-p [protein fasta file]
+-g [genomic fasta file]
+-b [bed file for CDS]
+-s [start position for genomic]
+-e [end position for genomic]
+-r [chr reference in fasta format]
+-i [Invert sequences]

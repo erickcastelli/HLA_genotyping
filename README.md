@@ -176,14 +176,22 @@ For this step, we will generate complete sequences for each HLA gene, and compar
 
 > perl export_count_translate_name_v3.pl
 
--v [vcf file]
--o [output folder]
--t [tag, file prefix]
--c [cds fasta file]
--p [protein fasta file]
--g [genomic fasta file]
--b [bed file for CDS]
--s [start position for genomic]
+-v [indicate the phased VCF produced by phasex or the one with the unphased singletons re-introduced]
+
+-o [indicate where the outputs should be placed]
+
+-t [indicate a prefix for the files, such as the name the gene. Do not use spaces.]
+
+-c [indicate the fasta file with known exonic sequences (nuc) from IPD-IMGT/HLA]
+
+-p [indicate the fasta file with known protein sequences (prot) from IPD-IMGT/HLA]
+
+-g [indicate the fasta file with known genomic sequences (gen) from IPD-IMGT/HLA]
+
+-b [indicate the BED file for this gene (e.g., HLA-G.exons.bed)]
+
+-s [indicate the starting position for this gene, which is indicated in the gemomic BED file (e.g., HLA-G.genomic.bed]
+
 -e [end position for genomic]
 -r [chr reference in fasta format]
 -i [Invert sequences]

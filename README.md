@@ -158,6 +158,7 @@ These unphased genotypes are not considered when we export complete sequences an
 
 
 ## STEP 11 - Calling complete sequences and HLA alleles
+For this step, we will generate complete sequences for each HLA gene, and compare this sequences with known ones from the IPD-IMGT/HLA database.
 
 
 

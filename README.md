@@ -79,30 +79,29 @@ There are many ways to proceed with variant refinement, i.e., removing artifacts
 
 Recode the VCF file using vcftools. This is important for the next steps to correct some minor encoding errors introduced by GATK.
 
-> vcftools --vcf VCF_FILE --recode --out OUTPUT_FOLDER/VCF_FILE_ENCODED
+> vcftools --vcf VCF_FILE --recode --out VCF_FILE_RECODE
 
-Using any application or script you want, please change any "|" allele separator for "/" in the recoded VCF file. 
+Using any application you want, **or the script provided in /support/unphase_genotypes.pl**, please change any "|" allele separator for "/" in the recoded VCF file. 
 
+Use vcfx to filter out artifacts and variants with too many missing alleles, as follows. Please check the vcfx manual to understand what is going on here (www.castelli-lab.net/apps/vcfx)
 
-Use vcfx to filter out artifacts and variants with too many missing alleles, as follows. Please check the vcfx manual to understand out is going on here (www.castelli-lab.net/apps/vcfx)
-
-> vcfx checkpl input=VCF_FILE (this will create a .pl.vcf file next to the original VCF)
+> vcfx checkpl input=VCF_FILE_RECODE (this will create a .pl.vcf file next to the original VCF)
 > 
-> bcftools view --trim-alt-alleles --min-ac 1 VCF_FILE.pl.vcf > VCF_FILE.pl.trim.vcf
+> bcftools view --trim-alt-alleles --min-ac 1 VCF_FILE_RECODE.pl.vcf > VCF_FILE_RECODE.pl.trim.vcf
 > 
-> vcfx evidence input=VCF_FILE.pl.trim.vcf (this will create a .pl.trim.evid.vcf)
+> vcfx evidence input=VCF_FILE_RECODE.pl.trim.vcf (this will create a .pl.trim.evid.vcf)
 > 
-> vcfx filter input=VCF_FILE.pl.trim.evid.vcf tag=PASS,WARN (this will create a .pl.trim.evid.filter.vcf)
+> vcfx filter input=VCF_FILE_RECODE.pl.trim.evid.vcf tag=PASS,WARN (this will create a .pl.trim.evid.filter.vcf)
 >
-> vcftools --vcf VCF_FILE.pl.trim.evid.filter.vcf --recode --out NEW_VCF
+> vcftools --vcf VCF_FILE_RECODE.pl.trim.evid.filter.vcf --recode --out VCF_FILE_RECODE.pl.trim.evid.filter.recoded.vcf
 
-The last VCF file contains only the variants that have passed the vcfx checkpl/evidence algorithm.
+The last VCF file contains only the variants that have passed the vcfx checkpl/evidence workflow. For now on, we will refer to this VCF file as "VCF".
 
 ```diff
 - Attention: In this step, you should manually check your VCF file and remove possible artifacts that may have passed the vcfx workflow.
 ```
 
-### Attention: We recommend performing the next steps for each gene separately. For that, you need to extract from the VCF the variants overlapping the gene you are interested, and perform the next steps. You can use vcftools for that.
+***Attention: We recommend performing the next steps for each gene separately. For that, you need to extract from the VCF the variants overlapping the gene you are interested, and perform the next steps. You can use vcftools for that, indicating the intervals with --from-bp and --to-bp. You may also try this pipiline with all variants together, but this decreases accuracy for detecting HLA alleles***
 
 ## STEP 6 - Normalize your multi-allelic VCF to biallelic VCF
 > bcftools norm -m-any VCF > BIALLELIC.VCF

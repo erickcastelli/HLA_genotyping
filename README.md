@@ -160,8 +160,11 @@ The final VCF file (in the phasex output folder, file results.vcf) is a phased V
 ```diff
 + Please note that the phased VCF generated up to this step is suitable for association studies and other purposes. For example, you can call HLA alleles, or you can convert it to a phased ARLEQUIN file (using vcfx arlequin).
 ```
+## STEP 10 - Convert the biallelic VCF to multi-allelic VCF
+> bcftools norm -m+any PHASED_VCF > PHASED_MULTIALLELIC.VCF
 
-## STEP 10 - Introducing unphased singletons (optional)
+
+## STEP 11 - Introducing unphased singletons (optional)
 
 This step is optional. This procedure will reintroduce the unphased singletons, that they will be recorded as unphased genotypes.
 
@@ -170,7 +173,7 @@ These unphased genotypes are not considered when we export complete sequences an
 **To reintroduce unphased singletons, use the script /support/insert_singletons_back_to_phased_data.pl**
 
 
-## STEP 11 - Calling complete sequences and HLA alleles
+## STEP 12 - Calling complete sequences and HLA alleles
 For this step, we will generate complete sequences for each HLA gene, and compare this sequences with known ones from the IPD-IMGT/HLA database.
 
 **You need to use the script /support/allele_calling/export_count_translate_name_v3.pl**

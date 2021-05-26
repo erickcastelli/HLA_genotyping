@@ -190,8 +190,11 @@ For this step, we will generate complete sequences for each HLA gene, and compar
 
 -b [indicate the BED file for this gene (e.g., HLA-G.exons.bed)]
 
--s [indicate the starting position for this gene, which is indicated in the gemomic BED file (e.g., HLA-G.genomic.bed]
+-s [indicate the starting position for this gene, which is indicated in the gemomic BED file (e.g., HLA-G.genomic.bed)]
 
--e [end position for genomic]
--r [chr reference in fasta format]
--i [Invert sequences]
+-e [indicate the ending position for this gene, which is indicated in the gemomic BED file (e.g., HLA-G.genomic.bed)]
+
+-r [indicate where is the sequence (fasta format) for chromosome 6, version hg38]
+
+-i [For some genes (.e.g, HLA-B and HLA-C), which are encoded in the reverse strand, you need to indicate this to invert all sequences]
+

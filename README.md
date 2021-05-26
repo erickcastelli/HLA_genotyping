@@ -31,7 +31,7 @@ Immunogenetics of resistance to SARS-CoV-2 infection in discordant couples. medR
 - IGV (https://software.broadinstitute.org/software/igv/)
 - Emboss (transeq)
 
-## STEP 1: Using hla-mapper to get unbiased rad mapping for HLA genes
+## STEP 1: Using hla-mapper to get unbiased read mapping for HLA genes
 This step is essential. You won't retrieve correct genotypes in HLA genes unless using a method tailored for these genes. We recommend the use of hla-mapper.
 
 hla-mapper supports many genes in the MHC region. Please check its website for instructions (www.castelli-lab.net/apps/hla-mapper)

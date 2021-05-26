@@ -9,7 +9,7 @@ The advantage of this method is that it calls variants, haplotypes, and then HLA
 
 This tutorial is suitable for whole-genome sequencing (WGS), whole-exome sequencing (WES), and amplicon sequencing. It has been tested with Illumina and Ion sequencing data. Please note that coverage is essential. We recommend a coverage of at least 30x for WGS, and 100x for WES and amplicons. Read size is also important, and you will get better results when dealing with a read size larger than 75 nucleotides.
 
-This procedure needs sample size. The minimum sample size we have tested in 150 samples. For a single-sample allele call, please use another method (such as HLA-LA). However, if you have a large sample size, this procedure is highly accurate and will provide you with SNPs (in the hg38 reference genome), haplotypes, and allele calls, and allow you to detect new variants.
+This procedure needs sample size. The minimum sample size we have tested is 150 samples. For a single-sample allele call, please use another method (such as HLA-LA). However, if you have a large sample size, this procedure is highly accurate and will provide you with SNPs (in the hg38 reference genome), haplotypes, and allele calls, and allow you to detect new variants.
 
 ## How to cite this pipeline
 This pipeline is described in:
@@ -60,7 +60,7 @@ There are two possible inputs for hla-mapper, a BAM file (step 1a), or FASTQ fil
 - You need to indicate a different output folder for each sample
 
 ## STEP 2 - Check some of the hla-mapper BAM files using IGV 
-Using IGV, please check some of the hla-mapper outputted BAM files (Sample_Name.adjusted.bam) using IGV. Make sure everything is OK. You can compare the original BAM (using BWA MEM) with the new one (using hla-mapper).
+Using IGV, please check some of the hla-mapper outputted BAM files (Sample_Name.adjusted.bam). Make sure everything is OK. You can compare the original BAM (using BWA MEM) with the new one (using hla-mapper).
 
 ## STEP 3 - Variant call using GATK 4
 We recommend GATK 4 HaplotypeCaller to call variants. The hla-mapper BAM file is already prepared for GATK.
@@ -123,7 +123,7 @@ The last VCF file contains only the variants that have passed the vcfx checkpl/e
 > bcftools norm -m-any VCF > BIALLELIC.VCF
 
 ## STEP 7 - Calling phasing sets directly from the sequencing data
-In this step, we will infer phase sets (the micro haplotypes) directly from the sequencing data. For that, there are two options: ReadBackedPhasing grom GATK 3.8, or WhatsHap. Both methods work well, but here we will address only the ReadBackedPhasing method.
+In this step, we will infer phase sets (the micro haplotypes) directly from the sequencing data. For that, there are two options: ReadBackedPhasing from GATK 3.8, or WhatsHap. Both methods work well, but here we will address only the ReadBackedPhasing method.
 
 To use ReadBackedPhasing and parallelize runs in different cores, please use the support script from phasex (https://github.com/erickcastelli/phasex). You should get familiar with phasex to understang how to do it, but it is a simple task using a Perl script. The script will split your VCF files, one for each sample, run ReadBackedPhasing in parallel, and join all files in a single VCF. 
 

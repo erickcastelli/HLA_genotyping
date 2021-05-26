@@ -29,6 +29,7 @@ Immunogenetics of resistance to SARS-CoV-2 infection in discordant couples. medR
 - bcftools 1.12 (http://samtools.github.io/bcftools/)
 - vcftools (http://vcftools.sourceforge.net)
 - IGV (https://software.broadinstitute.org/software/igv/)
+- Emboss (transeq)
 
 ## STEP 1: Using hla-mapper to get unbiased rad mapping for HLA genes
 This step is essential. You won't retrieve correct genotypes in HLA genes unless using a method tailored for these genes. We recommend the use of hla-mapper.
@@ -198,3 +199,9 @@ For this step, we will generate complete sequences for each HLA gene, and compar
 
 -i [For some genes (.e.g, HLA-B and HLA-C), which are encoded in the reverse strand, you need to indicate this to invert all sequences]
 
+The script will output the following files in the folder you have indicated:
+
+- TAG.genomic.fas (a fasta file with two complete sequences for every individual, one per chromosome [h1 and h2])
+- TAG.genomic.counted.fas (a fasta file with one copy of each different sequence, and their name according to the IPD-IMGT/HLA database, or and indication that this is a new sequence).
+- TAG.cds.fas (a fasta file with two CDS sequences for every individual, one per chromosome [h1 and h2])
+- TAG.cds.counted.fas (a fasta file with one copy of each different sequence, and their names according to the IPD-IMGT/HLA database, or and indication that this is a new sequence).

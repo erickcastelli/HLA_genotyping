@@ -205,3 +205,6 @@ The script will output the following files in the folder you have indicated:
 - TAG.genomic.counted.fas (a fasta file with one copy of each different sequence, and their name according to the IPD-IMGT/HLA database, or and indication that this is a new sequence).
 - TAG.cds.fas (a fasta file with two CDS sequences for every individual, one per chromosome [h1 and h2])
 - TAG.cds.counted.fas (a fasta file with one copy of each different sequence, and their names according to the IPD-IMGT/HLA database, or and indication that this is a new sequence).
+- TAG.prot.fas (the translation of the CDS sequences of each individual, one per chromosome [h1 and h2])
+- TAG.prot.counted.fas (a fasta file with one copy of each different sequence, and their names according to the IPD-IMGT/HLA database, or and indication that this is a new sequence).
+- TAG.db.txt (a tab separated file with the results for all samples)

@@ -137,49 +137,51 @@ Now, you can genotype your GVCF using GATK GenotypeGVCFs. If you used CombineGVF
 ```
 
 ## STEP 4 - Variant refinement
-There are many ways to proceed with variant refinement, i.e., removing artifacts. Here, we will combine GATK VQSR (better for large sample sizes, WGS and WES) and vcfx (better for small datasets). 
-Recode the VCF file using vcftools. This is important for the following steps to correct some minor encoding errors sometimes introduced by GATK.
-vcftools --vcf VCF_FILE --recode --out VCF_FILE_RECODE
-Use sed to change any "|" allele separator for "/" in VCF file.
-sed 's/|/\//g' VCF_FILE_RECODE.VCF > VCF_FILE_RECODE_TREATED
+There are many ways to proceed with variant refinement, i.e., removing artifacts. Here, we will combine GATK VQSR (better for large sample sizes, WGS and WES) and vcfx (better for small datasets).
 
+Recode the VCF file using vcftools. This is important for the following steps to correct some minor encoding errors sometimes introduced by GATK.
+> vcftools --vcf VCF_FILE --recode --out VCF_FILE_RECODE
+
+Use sed to change any "|" allele separator for "/" in VCF file.
+> sed 's/|/\//g' VCF_FILE_RECODE.VCF > VCF_FILE_RECODE_TREATED
 
 Compress the file with BGZIP and index it with TABIX.
-bgzip VCF_FILE_RECODE_TREATED 
-tabix -p vcf VCF_FILE_RECODE_TREATED_GZ
-
-
+> bgzip VCF_FILE_RECODE_TREATED 
+> tabix -p vcf VCF_FILE_RECODE_TREATED_GZ
 
 
 Use GATK VQSR to filter out artifacts. Please follow the GATK 4 instructions. 
 An example of this step is as follows. The MHC.select.vcf.gz file is provided in the supplementary files.
-java -Xmx32g -jar gatk-package-4.2.0.0-local.jar VariantRecalibrator -R hg38.fasta -V VCF_FILE_RECODE_TREATED_GZ -an QD -an MQ -an MQRankSum -an ReadPosRankSum -an FS -an SOR -mode BOTH -O vcf.recal --tranches-file vcf.tranches --resource:local,known=false,training=true,truth=true,prior=15.0 MHC.select.vcf.gz --resource:hapmap,known=false,training=true,truth=true,prior=15.0 resources_broad_hg38_v0_hapmap_3.3.hg38.vcf.gz --resource:omni,known=false,training=true,truth=false,prior=12.0 resources_broad_hg38_v0_1000G_omni2.5.hg38.vcf.gz --resource:1000G,known=false,training=true,truth=false,prior=10.0 resources_broad_hg38_v0_1000G_phase1.snps.high_confidence.hg38.vcf.gz --resource:dbsnp,known=true,training=false,truth=false,prior=2.0 All_20180418.chr6.vcf.gz --resource:mills,known=false,training=true,truth=false,prior=12.0 /resources_broad_hg38_v0_Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
+
+> java -Xmx32g -jar gatk-package-4.2.0.0-local.jar VariantRecalibrator -R hg38.fasta -V VCF_FILE_RECODE_TREATED_GZ -an QD -an MQ -an MQRankSum -an ReadPosRankSum -an FS -an SOR -mode BOTH -O vcf.recal --tranches-file vcf.tranches --resource:local,known=false,training=true,truth=true,prior=15.0 MHC.select.vcf.gz --resource:hapmap,known=false,training=true,truth=true,prior=15.0 resources_broad_hg38_v0_hapmap_3.3.hg38.vcf.gz --resource:omni,known=false,training=true,truth=false,prior=12.0 resources_broad_hg38_v0_1000G_omni2.5.hg38.vcf.gz --resource:1000G,known=false,training=true,truth=false,prior=10.0 resources_broad_hg38_v0_1000G_phase1.snps.high_confidence.hg38.vcf.gz --resource:dbsnp,known=true,training=false,truth=false,prior=2.0 All_20180418.chr6.vcf.gz --resource:mills,known=false,training=true,truth=false,prior=12.0 /resources_broad_hg38_v0_Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
 
 
-java -Xmx32g -jar gatk-package-4.2.0.0-local.jar ApplyVQSR -R hg38.fasta -V VCF_FILE_RECODE_TREATED_GZ -O VCF_FILE_RECODE_TREATED_VQSR --tranches-file vcf.tranches --recal-file vcf.recal --mode BOTH --truth-sensitivity-filter-level 99.0
+> java -Xmx32g -jar gatk-package-4.2.0.0-local.jar ApplyVQSR -R hg38.fasta -V VCF_FILE_RECODE_TREATED_GZ -O VCF_FILE_RECODE_TREATED_VQSR --tranches-file vcf.tranches --recal-file vcf.recal --mode BOTH --truth-sensitivity-filter-level 99.0
 
-
+```diff
 - Attention: You need to adjust the amount of memory (in this case, 32Gb), the path for the reference genome (you may use the provided chr6.fasta).
-
+```
 
 Use the provided script "filter_after_VQSR.pl" and file "MHC_All.vcf" to filter out the artifacts.
+
 We will call the new VCF file after the VQSR procedure as VCF.VQSR.vcf
 
 
 Use vcfx to introduce missing alleles in unbalanced heterozygous sites and in homozygous sites in regions with very low read depth. Please check the vcfx manual to understand what is going on here (www.castelli-lab.net/apps/vcfx).
+
 vcfx checkad input=VCF.VQSR.vcf (this will create a .ad.vcf file next to the original VCF)
 
 Use bcftools to remove alleles that no longer exist, and vcftools to recode the file.
-bcftools view --trim-alt-alleles VCF.VQSR.ad.vcf > VCF.VQSR.ad.trim.vcf
-bcftools view --min-ac 1 VCF.VQSR.ad.trim.vcf > VCF.VQSR.ad.trim.minac.vcf
-vcftools --vcf VCF.VQSR.ad.trim.minac.vcf --recode --out VCF.VQSR.ad.trim.minac.rec.vcf
+> bcftools view --trim-alt-alleles VCF.VQSR.ad.vcf > VCF.VQSR.ad.trim.vcf
+> bcftools view --min-ac 1 VCF.VQSR.ad.trim.vcf > VCF.VQSR.ad.trim.minac.vcf
+> vcftools --vcf VCF.VQSR.ad.trim.minac.vcf --recode --out VCF.VQSR.ad.trim.minac.rec.vcf
 
 
 The last VCF file contains only the variants that have passed the VQSR/vcfx workflow. For now on, we will refer to this VCF file as "VCF".
 + Please note that the VCF generated up to this step is suitable for association studies and other purposes. Still, it consists of unphased genotypes with some missing alleles.
 
 
-STEP 5 - Calling phasing sets directly from the sequencing data
+## STEP 5 - Calling phasing sets directly from the sequencing data
 In this step, we will infer phase sets (the micro haplotypes) directly from the sequencing data using WhatsHap. We will use these phase sets in the upcoming haplotyping procedure with shapeit4.
 We have two options here. 
 The first option is to run WhatsHap as recommended, using a single core, such as this:

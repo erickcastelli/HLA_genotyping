@@ -2,6 +2,9 @@
 Tutorial for genotyping, haplotyping, and allele calling for HLA genes
 
 Version 1.0 (May 25th, 2021)
+```diff
+- Attention: This pipeline is no longer supported. Please refer to version 2 or higher.
+```
 
 Author: Erick C. Castelli (erick.castelli@unesp.br)
 

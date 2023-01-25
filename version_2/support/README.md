@@ -10,3 +10,5 @@ Please check the main README file for instructions.
 - parallelize_whatshap.pl (to run whatshap in multiple cores)
 
 - call_alleles.zip (please unzip - for allele calling)
+
+- chr6.fasta (please download it [here](www.castelli-lab.net/web/download/support/chr6.zip)

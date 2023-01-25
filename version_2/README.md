@@ -210,6 +210,7 @@ You will find a whatshap.vcf file in the output folder.
 > bcftools norm -m-any whatshap.vcf > whatshap.biallelic.vcf
 
 Use bgzip and tabix to compress and index the whatshap.biallelic.vcf file
+
 ***attention: you should use bcftools 1.13***
 
 
@@ -221,7 +222,7 @@ An example of this run is as follows:
 
 The final VCF file is a phased biallelic VCF.
 ```diff
-attention: you may adjust the number of threads, the interactions scheme. Include the map file --map is optional. However, never forget to include --sequencing and --use-PS
+- Attention: you may adjust the number of threads, the interactions scheme. Include the map file --map is optional. However, never forget to include --sequencing and --use-PS
 ```
 
 ## STEP 8 - Convert the biallelic VCF to multi-allelic VCF

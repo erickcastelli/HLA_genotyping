@@ -1,15 +1,21 @@
 
 # HLA genotyping, haplotyping, and allele calling from short-read next-generation sequencing data
 Version 2.0 (Jan 25th, 2023)
+
 Author: Erick C. Castelli (erick.castelli@unesp.br)
 
 
 ## Important notes:
-This pipeline was designed to call SNPs and indels in genes from the MHC region, get the haplotypes, and call HLA alleles directly from the phased VCF data. 
+This pipeline was designed to call SNPs and indels in genes from the MHC region, get the haplotypes, and call HLA alleles directly from the phased VCF data.
+
 Data compatibility: this tutorial is compatible with whole-genome sequencing (WGS), whole-exome sequencing (WES), and amplicon sequencing. It was tested with short reads from Illumina (WGS and WES). It might work with Ion with some adjustments.
+
 System compatibility: macOS and Linux. We have tested with MacOS 10.15 and Ubuntu 18.04. Other versions might be compatible.
+
 Read depth: please note that read depth is essential. We recommend coverage of at least 30x for WGS and 50x for WES and amplicons. 
+
 Read size: you will get better results when dealing with a read size larger than 75 nucleotides and paired-end sequencing, although the pipeline is also compatible with single-end sequencing data.
+
 Sample size: The minimum sample size we have tested is 150 samples. You can proceed with a single-sample analysis up to step 3, but not further. Please use another method (such as HLA-LA) for a single-sample allele call. 
 
 

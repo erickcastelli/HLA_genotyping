@@ -22,7 +22,7 @@ Sample size: The minimum sample size we have tested is 150 samples. You can proc
 ## Dependences
 The following list contains all the software used in this pipeline and their indicated versions. Newer or older versions might also work, but we haven't tested them.
 
-Attention: Please use bcftools 1.13. The pipeline will not work in newer versions. 
+**Attention: Please use bcftools 1.13. The pipeline will not work in newer versions. **
 
 hla-mapper 4 (www.castelli-lab.net/apps/hla-mapper)
 
@@ -38,7 +38,8 @@ samtools, 1.16 or higher (http://samtools.sourceforge.net)
 
 BWA, 0.7.17 (https://sourceforge.net/projects/bio-bwa/files/)
 
-bcftools, 1.13 (http://samtools.github.io/bcftools/)
+bcftools, 
+(http://samtools.github.io/bcftools/)
 
 IGV, any version (https://software.broadinstitute.org/software/igv/)
 
@@ -242,6 +243,7 @@ The first step is compressing and indexing the VCF file from step 8 using BGZIP 
 A typical run would be something like this:
 > perl hla-mapper_call_alleles.pl -v whatshap.biallelic.shapeit.multi.vcf.gz -p HLA-B -o /home/lab/allele_out/ -r chr6.fasta
 
+
 -v [the VCF file, compressed and indexed with BGZIP and TABIX)
 
 -p [the profile, such as HLA-B]
@@ -249,6 +251,7 @@ A typical run would be something like this:
 -o [where the outputs should be placed]
 
 -r [the reference sequence for chr6]
+
 
 
 You can check the available profiles in the /bed folder. You may also create a new profile by adding/replacing files following the pattern observed in the /bed folder. 
@@ -295,7 +298,7 @@ HLA-B.db.txt
 A tab separated file with the results for all samples. Please ignore the Genomic data if your data does not contain introns. There is also an indication of the size of each sequence.
 
 
-STEP 10 - Checking the alleles
+## STEP 10 - Checking the alleles
 At this step, please check the .db.txt file and evaluate with this data is as you expected. There are too many new alleles, and you did not expect that? Maybe an artifact may be passed the VQSR/vcfx workflow and needs to be manually removed, or something correct didn't pass the filer and must be manually recovered. For instance, if there are many samples with the same new allele, you may inspect the BAM file of one of these samples and the VCF using IGV to detect if there is a problem. If this is the case, you should perform the necessary adjustments and go back to step 5.
 
 

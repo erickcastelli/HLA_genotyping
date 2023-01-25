@@ -147,6 +147,7 @@ Use sed to change any "|" allele separator for "/" in VCF file.
 
 Compress the file with BGZIP and index it with TABIX.
 > bgzip VCF_FILE_RECODE_TREATED 
+
 > tabix -p vcf VCF_FILE_RECODE_TREATED_GZ
 
 
@@ -173,7 +174,9 @@ Use vcfx to introduce missing alleles in unbalanced heterozygous sites and in ho
 
 Use bcftools to remove alleles that no longer exist, and vcftools to recode the file.
 > bcftools view --trim-alt-alleles VCF.VQSR.ad.vcf > VCF.VQSR.ad.trim.vcf
+
 > bcftools view --min-ac 1 VCF.VQSR.ad.trim.vcf > VCF.VQSR.ad.trim.minac.vcf
+
 > vcftools --vcf VCF.VQSR.ad.trim.minac.vcf --recode --out VCF.VQSR.ad.trim.minac.rec.vcf
 
 

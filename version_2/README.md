@@ -21,6 +21,7 @@ Sample size: The minimum sample size we have tested is 150 samples. You can proc
 
 ## Dependences
 The following list contains all the software used in this pipeline and their indicated versions. Newer or older versions might also work, but we haven't tested them.
+
 Attention: Please use bcftools 1.13. The pipeline will not work in newer versions. 
 
 hla-mapper 4 (www.castelli-lab.net/apps/hla-mapper)
@@ -40,10 +41,15 @@ BGZIP and TABIX
 ## How to cite this pipeline:
 
 You should cite hla-mapper:
+
 Hla-mapper: an application to optimize the mapping of hla sequences produced by massively parallel sequencing procedures. Human Immunology 2018. doi: 10.1016/j.humimm.2018.06.010
+
 You should cite all the applications described in previous section (samtools, bcftools, shapeit4, etc)
+
 And this pipeline was used in these two studies:
+
 MHC Variants Associated With Symptomatic Versus Asymptomatic SARS-CoV-2 Infection in Highly Exposed Individuals. Front. Immunol., 28 September 2021, https://doi.org/10.3389/fimmu.2021.742881
+
 MUC22, HLA-A, and HLA-DOB variants and COVID-19 in resilient super-agers from Brazil. Front. Immunol., 25 October 2022, https://doi.org/10.3389/fimmu.2022.975918
 
 

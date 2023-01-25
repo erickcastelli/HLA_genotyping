@@ -25,16 +25,27 @@ The following list contains all the software used in this pipeline and their ind
 Attention: Please use bcftools 1.13. The pipeline will not work in newer versions. 
 
 hla-mapper 4 (www.castelli-lab.net/apps/hla-mapper)
+
 GATK, 4.2.0 or higher (https://gatk.broadinstitute.org/hc/en-us)
+
 WhatsHap, 1.4 or higher (https://whatshap.readthedocs.io/en/latest/)
+
 vcfx 2 (www.castelli-lab.net/apps/vcfx)
+
 shapeit4 (https://odelaneau.github.io/shapeit4/)
+
 samtools, 1.16 or higher (http://samtools.sourceforge.net)
+
 BWA, 0.7.17 (https://sourceforge.net/projects/bio-bwa/files/)
+
 bcftools, 1.13 (http://samtools.github.io/bcftools/)
+
 IGV, any version (https://software.broadinstitute.org/software/igv/)
+
 vcftools, any version (https://vcftools.sourceforge.net/) 
+
 Emboss, 6.6 (https://emboss.sourceforge.net/download/) 
+
 BGZIP and TABIX
 
 

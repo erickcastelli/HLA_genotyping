@@ -11,4 +11,4 @@ Please check the main README file for instructions.
 
 - call_alleles.zip (please unzip - for allele calling)
 
-- chr6.fasta (please download it [here](http://www.castelli-lab.net/web/download/support/chr6.zip))
+- chr6.fasta (please download it [here](http://www.castelli-lab.net/web/download/download.php?file=support/chr6.zip))

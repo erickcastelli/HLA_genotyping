@@ -1,10 +1,10 @@
 
-HLA genotyping, haplotyping, and allele calling from short-read next-generation sequencing data
+#HLA genotyping, haplotyping, and allele calling from short-read next-generation sequencing data
 Version 2.0 (Jan 25th, 2023)
 Author: Erick C. Castelli (erick.castelli@unesp.br)
 
 
-Important notes:
+##Important notes:
 This pipeline was designed to call SNPs and indels in genes from the MHC region, get the haplotypes, and call HLA alleles directly from the phased VCF data. 
 Data compatibility: this tutorial is compatible with whole-genome sequencing (WGS), whole-exome sequencing (WES), and amplicon sequencing. It was tested with short reads from Illumina (WGS and WES). It might work with Ion with some adjustments.
 System compatibility: macOS and Linux. We have tested with MacOS 10.15 and Ubuntu 18.04. Other versions might be compatible.
@@ -13,16 +13,16 @@ Read size: you will get better results when dealing with a read size larger than
 Sample size: The minimum sample size we have tested is 150 samples. You can proceed with a single-sample analysis up to step 3, but not further. Please use another method (such as HLA-LA) for a single-sample allele call. 
 
 
-Dependences
+##Dependences
 The following list contains all the software used in this pipeline and their indicated versions. Newer or older versions might also work, but we haven't tested them.
 Attention: Please use bcftools 1.13. The pipeline will not work in newer versions. 
 
 hla-mapper 4 (www.castelli-lab.net/apps/hla-mapper)
-GATK, 4.2.0 (https://gatk.broadinstitute.org/hc/en-us)
-WhatsHap, 1.4 (https://whatshap.readthedocs.io/en/latest/)
+GATK, 4.2.0 or higher (https://gatk.broadinstitute.org/hc/en-us)
+WhatsHap, 1.4 or higher (https://whatshap.readthedocs.io/en/latest/)
 vcfx 2 (www.castelli-lab.net/apps/vcfx)
 shapeit4 (https://odelaneau.github.io/shapeit4/)
-samtools, 1.16 (http://samtools.sourceforge.net)
+samtools, 1.16 or higher (http://samtools.sourceforge.net)
 BWA, 0.7.17 (https://sourceforge.net/projects/bio-bwa/files/)
 bcftools, 1.13 (http://samtools.github.io/bcftools/)
 IGV, any version (https://software.broadinstitute.org/software/igv/)
@@ -31,8 +31,7 @@ Emboss, 6.6 (https://emboss.sourceforge.net/download/)
 BGZIP and TABIX
 
 
-How to cite this pipeline:
-
+##How to cite this pipeline:
 
 You should cite hla-mapper:
 Hla-mapper: an application to optimize the mapping of hla sequences produced by massively parallel sequencing procedures. Human Immunology 2018. doi: 10.1016/j.humimm.2018.06.010
@@ -42,7 +41,7 @@ MHC Variants Associated With Symptomatic Versus Asymptomatic SARS-CoV-2 Infectio
 MUC22, HLA-A, and HLA-DOB variants and COVID-19 in resilient super-agers from Brazil. Front. Immunol., 25 October 2022, https://doi.org/10.3389/fimmu.2022.975918
 
 
-STEP 1: Using hla-mapper to get unbiased read alignment for HLA genes
+##STEP 1: Using hla-mapper to get unbiased read alignment for HLA genes
 This step is essential. You won't retrieve accurate genotypes in HLA genes unless you use an alignment method tailored for these genes.
  
 hla-mapper supports many genes in the MHC region. Please check its website for instructions (www.castelli-lab.net/apps/hla-mapper)
@@ -51,7 +50,7 @@ hla-mapper supports many genes in the MHC region. Please check its website for i
 There are two possible inputs for hla-mapper, a BAM file (step 1A) or FASTQ files (step 1B). Step 1A allows you to get genotypes in intergenic regions, while step 1B focuses only on the HLA genes. Step 1A is also suitable if you already have a BAM file with reads aligned to the hg38 reference genome.
 
 
-STEP 1A: 
+##STEP 1A: 
 If you already have a BAM file aligned to the human reference genome hg38, you may skip the first part and go directly to the hla-mapper part. 
 Download a copy of the human reference genome (hg38) and prepare it for BWA. We recommend using a reference genome with the "chr" annotation for chromosomes, such as hg38DH used in the 1000Genomes project. All the scripts in this pipeline were designed for a reference genome with "chr6".
 
@@ -68,7 +67,7 @@ hla-mapper dna threads=number_of_threads bam=sample.bam db=hla_mapper_database s
 Repeat this last part for each sample. Please indicate a different output folder for each sample.
 
 
-STEP 1B:
+##STEP 1B:
 Get unbiased alignments with hla-mapper 4:
 hla-mapper dna threads=number_of_threads r1=R1.fastq.gz r2=R2.fastq.gz db=hla_mapper_database sample=Sample_Name output=output_folder
 Repeat this last part for each sample. Please indicate a different output folder for each sample.
@@ -76,7 +75,7 @@ Please note that hla-mapper can handle uncompressed and compressed FASTQ files.
 - Attention: hla-mapper supports single-end sequencing data. Instead of r1= and r2=, use r0= to indicate your single-end fastq.
 
 
-STEP 2 - Check some of the BAM files using IGV
+##STEP 2 - Check some of the BAM files using IGV
 Using IGV, please check some of the hla-mapper BAM files produced by hla-mapper (Sample_Name.adjusted.bam or Sample_Name.adjusted.nodup.bam). Make sure everything is OK. For step 1A, you can compare the original BAM (before hla-mapper optimization) with the new ones.
 
 

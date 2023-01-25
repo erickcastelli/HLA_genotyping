@@ -187,62 +187,76 @@ The last VCF file contains only the variants that have passed the VQSR/vcfx work
 
 ## STEP 5 - Calling phasing sets directly from the sequencing data
 In this step, we will infer phase sets (the micro haplotypes) directly from the sequencing data using WhatsHap. We will use these phase sets in the upcoming haplotyping procedure with shapeit4.
-We have two options here. 
-The first option is to run WhatsHap as recommended, using a single core, such as this:
-whatshap phase --indels -o whatshap.vcf --reference chr6.fasta --tag PS VCF.VQSR.ad.trim.minac.rec.vcf bam1 bam2 bam3 …
-However, we recommend the next option because it uses better your computation resources and maximizes the WhatsHap phasing capacity by transforming some multi-allelic variants into bi-allelic ones.
 
+We have two options here. 
+
+The first option is to run WhatsHap as recommended, using a single core, such as this:
+> whatshap phase --indels -o whatshap.vcf --reference chr6.fasta --tag PS VCF.VQSR.ad.trim.minac.rec.vcf bam1 bam2 bam3 …
+
+However, we recommend the next option because it uses better your computation resources and maximizes the WhatsHap phasing capacity by transforming some multi-allelic variants into bi-allelic ones.
 
 The second (and recommended) option is to run WhatsHap in parallel using the provided script (parallelize_whatshap.pl). This script will split your VCF files into single-sample VCF files, call WhatsHap for each sample in parallel, and join all files in a single VCF.
 
-
 The input for this step is the VCF file produced in step 4 (VCF.VQSR.ad.trim.minac.rec.vcf). The output is a VCF file with phase sets (whatshap.vcf)
 An example of the script to parallelize whatshap:
-perl parallelize_whatshap.pl -v VCF.VQSR.ad.trim.minac.rec.vcf -b /Users/lab/bams/ -o /Users/lab/whatshap_out/ -r chr6.fasta
-
+> perl parallelize_whatshap.pl -v VCF.VQSR.ad.trim.minac.rec.vcf -b /Users/lab/bams/ -o /Users/lab/whatshap_out/ -r chr6.fasta
 
 You will find a whatshap.vcf file in the output folder.
-
-
+```diff
 - Attention: You should copy all the .adjusted.bam and .adjusted.bam.bai files from each hla-mapper output to the same location, and indicate this location using the -b option.
+```
 
+## STEP 6 - Normalize your WhatsHap VCF to a biallelic VCF
+> bcftools norm -m-any whatshap.vcf > whatshap.biallelic.vcf
 
-STEP 6 - Normalize your WhatsHap VCF to a biallelic VCF
-bcftools norm -m-any whatshap.vcf > whatshap.biallelic.vcf
 Use bgzip and tabix to compress and index the whatshap.biallelic.vcf file
-attention: you should use bcftools 1.13
+***attention: you should use bcftools 1.13***
 
 
-STEP 7 - Calling haplotypes
+## STEP 7 - Calling haplotypes
 We will use shapeit4 to call haplotypes. Please check https://odelaneau.github.io/shapeit4/ for instructions on how to do it.
-An example of this run is as follows:
-shapeit4 --input whatshap.biallelic.vcf.gz --map chr6.b38.gmap.gz --region chr6 --output whatshap.biallelic.shapeit.vcf --thread 10 --mcmc-iterations 10b,1p,1b,1p,1b,1p,1b,1p,10m --sequencing --use-PS 0.0001 
-The final VCF file is a phased biallelic VCF.
-attention: you may adjust the number of threads, the interactions scheme. Include the map file --map is optional. However, never forget to include --sequencing and --use-PS
 
-STEP 8 - Convert the biallelic VCF to multi-allelic VCF
-bcftools norm -m+any whatshap.biallelic.shapeit.vcf  > whatshap.biallelic.shapeit.multi.vcf 
+An example of this run is as follows:
+> shapeit4 --input whatshap.biallelic.vcf.gz --map chr6.b38.gmap.gz --region chr6 --output whatshap.biallelic.shapeit.vcf --thread 10 --mcmc-iterations 10b,1p,1b,1p,1b,1p,1b,1p,10m --sequencing --use-PS 0.0001 
+
+The final VCF file is a phased biallelic VCF.
+```diff
+attention: you may adjust the number of threads, the interactions scheme. Include the map file --map is optional. However, never forget to include --sequencing and --use-PS
+```
+
+## STEP 8 - Convert the biallelic VCF to multi-allelic VCF
+> bcftools norm -m+any whatshap.biallelic.shapeit.vcf  > whatshap.biallelic.shapeit.multi.vcf 
+```diff
 attention: you should use bcftools 1.13
 + Please note that the VCF generated up to this step is suitable for association studies and other purposes. 
+```
 
-
-STEP 9 - Calling complete sequences and HLA alleles
+## STEP 9 - Calling complete sequences and HLA alleles
 For this step, we will generate complete sequences for each HLA gene, and compare them with known ones from the IPD-IMGT/HLA database.
+
 You should use the provided script hla-mapper_call_alleles.pl
+
 The first step is compressing and indexing the VCF file from step 8 using BGZIP and TABIX.
+
 A typical run would be something like this:
-perl hla-mapper_call_alleles.pl -v whatshap.biallelic.shapeit.multi.vcf.gz -p HLA-B -o /home/lab/allele_out/ -r chr6.fasta
+> perl hla-mapper_call_alleles.pl -v whatshap.biallelic.shapeit.multi.vcf.gz -p HLA-B -o /home/lab/allele_out/ -r chr6.fasta
 
 -v [the VCF file, compressed and indexed with BGZIP and TABIX)
+
 -p [the profile, such as HLA-B]
+
 -o [where the outputs should be placed]
+
 -r [the reference sequence for chr6]
 
 
 You can check the available profiles in the /bed folder. You may also create a new profile by adding/replacing files following the pattern observed in the /bed folder. 
+
 The /imgt_db/HLA folder contains the IPD-IMGT/HLA database sequences. You can update this data if you want.
+
 The script will create the output folder and a folder for each profile. These are the files in the output folder, using HLA-B as the profile:
 HLA-B.genomic.fas
+
 A fasta file with two complete sequences for every individual, one per chromosome [h1 and h2]. You should ignore this file when dealing with exomes, or when your sequencing data does not contain intronic and UTR data.
 
 

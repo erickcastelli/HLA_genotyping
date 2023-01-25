@@ -313,7 +313,6 @@ At this step, please check the .db.txt file and evaluate with this data is as yo
 For instance, if there are many samples with the same new allele, you may inspect the BAM file of one of these samples and the VCF using IGV to detect if there is a problem. If this is the case, you should perform the necessary adjustments and go back to step 5.
 
 
-***Known issues
-
-***Sometimes there is capture bias for exomes and panels, and some of the chromosomes are not captured or are under-captured. This might lead to genotyping errors beyond this pipeline's scope. This is frequently observed for HLA-DQA1 and HLA-DQB1 and exomes. We have solved this problem with imputation using the data from step 4 (please refer to doi 10.3389/fimmu.2022.975918).
+**Known issues
+**Sometimes there is capture bias for exomes and panels, and some of the chromosomes are not captured or are under-captured. This might lead to genotyping errors beyond this pipeline's scope. This is frequently observed for HLA-DQA1 and HLA-DQB1 and exomes. We have solved this problem with imputation using the data from step 4 (please refer to doi 10.3389/fimmu.2022.975918).
 

@@ -1,4 +1,4 @@
-# HLA Genotyping, haplotyping, and allele calling from next-generation sequencing data
+# HLA Genotyping, haplotyping, and allele calling from short-read next-generation sequencing data
 Tutorial for genotyping, haplotyping, and allele calling for HLA genes
 
 Author: Erick C. Castelli (erick.castelli@unesp.br)

@@ -97,31 +97,46 @@ Repeat this last part for each sample. Please indicate a different output folder
 
 ## STEP 1B:
 Get unbiased alignments with hla-mapper 4:
-hla-mapper dna threads=number_of_threads r1=R1.fastq.gz r2=R2.fastq.gz db=hla_mapper_database sample=Sample_Name output=output_folder
-Repeat this last part for each sample. Please indicate a different output folder for each sample.
-Please note that hla-mapper can handle uncompressed and compressed FASTQ files.
-- Attention: hla-mapper supports single-end sequencing data. Instead of r1= and r2=, use r0= to indicate your single-end fastq.
+> hla-mapper dna threads=number_of_threads r1=R1.fastq.gz r2=R2.fastq.gz db=hla_mapper_database sample=Sample_Name output=output_folder
 
+Repeat this last part for each sample. Please indicate a different output folder for each sample.
+
+Please note that hla-mapper can handle uncompressed and compressed FASTQ files.
+```diff
+- Attention: hla-mapper supports single-end sequencing data. Instead of r1= and r2=, use r0= to indicate your single-end fastq.
+```
 
 ## STEP 2 - Check some of the BAM files using IGV
-Using IGV, please check some of the hla-mapper BAM files produced by hla-mapper (Sample_Name.adjusted.bam or Sample_Name.adjusted.nodup.bam). Make sure everything is OK. For step 1A, you can compare the original BAM (before hla-mapper optimization) with the new ones.
+Using IGV, please check some of the hla-mapper BAM files produced by hla-mapper (Sample_Name.adjusted.bam or Sample_Name.adjusted.nodup.bam). 
+
+Make sure everything is OK. For step 1A, you can compare the original BAM (before hla-mapper optimization) with the new ones.
 
 
 ## STEP 3 - Variant call using GATK 4
-We recommend GATK 4 HaplotypeCaller to call variants when using Illumina data. Freebayes also works very well, but this pipeline is focused on GATK. The hla-mapper BAM file is already prepared for GATK and freebayes. For Ion data, freebayes should produce better results. 
-For each sample, run GATK HaplotypeCaller in the GVCF mode, such as this example:
-java -Xmx32g -jar gatk-package-4.2.0.0-local.jar HaplotypeCaller -R reference_genome -I Sample_name.adjusted.bam -O output_folder/Sample_name.MHC.g.vcf -L chr6:29700000-33150000 -ERC GVCF --max-num-haplotypes-in-population 256 --native-pair-hmm-threads thread_number --allow-non-unique-kmers-in-ref TRUE
-- Attention: If you are interested only in one gene (e.g., HLA-A), you can adjust the interval accordingly. You need to adjust the amount of memory (in this case, 32Gb), the path for the reference genome (reference_genome), the path for the hla-mapper output BAM (Sample_name.adjusted.bam), the output folder (output_folder), the sample name, and the number of threads (thread_number).
+We recommend GATK 4 HaplotypeCaller to call variants when using Illumina data. 
 
+Freebayes also works very well, but this pipeline is focused on GATK. 
+
+The hla-mapper BAM file is already prepared for GATK and freebayes. For Ion data, freebayes should produce better results. 
+
+For each sample, run GATK HaplotypeCaller in the GVCF mode, such as this example:
+> java -Xmx32g -jar gatk-package-4.2.0.0-local.jar HaplotypeCaller -R reference_genome -I Sample_name.adjusted.bam -O output_folder/Sample_name.MHC.g.vcf -L chr6:29700000-33150000 -ERC GVCF --max-num-haplotypes-in-population 256 --native-pair-hmm-threads thread_number --allow-non-unique-kmers-in-ref TRUE
+
+```diff
+- Attention: If you are interested only in one gene (e.g., HLA-A), you can adjust the interval accordingly. You need to adjust the amount of memory (in this case, 32Gb), the path for the reference genome (reference_genome), the path for the hla-mapper output BAM (Sample_name.adjusted.bam), the output folder (output_folder), the sample name, and the number of threads (thread_number).
+```
 
 Repeat this step for every sample.
+
 After processing all your samples, you need to combine all G.VCF files into one. There are two ways to do that, depending on the number of samples. The most common one is using GATK CombineGVCFs (https://gatk.broadinstitute.org/hc/en-us/articles/360037053272-CombineGVCFs). The other is GenomicsDBImport (https://gatk.broadinstitute.org/hc/en-us/articles/360036883491-GenomicsDBImport). This tutorial does not cover this issue. Please follow the GATK instructions and combine all GVCFS into one.
+
 Now, you can genotype your GVCF using GATK GenotypeGVCFs. If you used CombineGVFs, one example is this:
-java -Xmx32g -jar gatk-package-4.2.0.0-local.jar GenotypeGVCFs -R reference_genome -O output_folder/MHC.vcf -L chr6:29700000-33150000 --variant output_folder/All_samples.MHC.g.vcf --dbsnp path_to_dbsnp_vcf
+> java -Xmx32g -jar gatk-package-4.2.0.0-local.jar GenotypeGVCFs -R reference_genome -O output_folder/MHC.vcf -L chr6:29700000-33150000 --variant output_folder/All_samples.MHC.g.vcf --dbsnp path_to_dbsnp_vcf
+```diff
 - Attention: If you are interested only in one gene (e.g., HLA-A), you can adjust the interval accordingly. You need to adjust the amount of memory (in this case, 32Gb), the path for the reference genome (reference_genome), the path for the hla-mapper output BAM (Sample_name.adjusted.bam), the output folder (output_folder), the sample name, and the number of threads (thread_number). dbSNP is optional.
+```
 
-
-STEP 4 - Variant refinement
+## STEP 4 - Variant refinement
 There are many ways to proceed with variant refinement, i.e., removing artifacts. Here, we will combine GATK VQSR (better for large sample sizes, WGS and WES) and vcfx (better for small datasets). 
 Recode the VCF file using vcftools. This is important for the following steps to correct some minor encoding errors sometimes introduced by GATK.
 vcftools --vcf VCF_FILE --recode --out VCF_FILE_RECODE

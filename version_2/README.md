@@ -236,7 +236,7 @@ attention: you should use bcftools 1.13
 ## STEP 9 - Calling complete sequences and HLA alleles
 For this step, we will generate complete sequences for each HLA gene, and compare them with known ones from the IPD-IMGT/HLA database.
 
-You should use the provided script hla-mapper_call_alleles.pl
+You should use the provided script **hla-mapper_call_alleles.pl
 
 The first step is compressing and indexing the VCF file from step 8 using BGZIP and TABIX.
 
@@ -265,43 +265,55 @@ A fasta file with two complete sequences for every individual, one per chromosom
 
 
 HLA-B.genomic.counted.fas
+
 A fasta file with one copy of each different sequence, their names according to the IPD-IMGT/HLA database, or an indication that they are new, followed by their size and how many times they were detected in your dataset. You should ignore this file when dealing with exomes or when your sequencing data does not contain intronic and UTR data.
 
 
 HLA-B.vcf
+
 This is a copy of the VCF file but containing only the HLA-B region.
 
 
 HLA-B.genomic.groups.fas
+
 If necessary, alleles with the same sequence will be indicated here because you are dealing with a smaller region.
 
 
 HLA-B.exon.fas
+
 A fasta file with two exonic sequences for every individual, one per chromosome [h1 and h2]. Exons and concatenated into a single sequence. 
 
 
 HLA-B.cds.fas
+
 A fasta file with two CDS sequences for every individual, one per chromosome [h1 and h2]. These sequences start at the first translated ATG and end at the stop codon. Exons and concatenated into a single sequence. 
  
 HLA-B.cds.counted.fas
+
 A fasta file with one copy of each different CDS sequence, their names according to the IPD-IMGT/HLA database, or an indication that they are new, followed by their size and how many times they were detected in your dataset. 
 
 
 HLA-B.prot.fas
+
 A fasta file with two protein sequences for every individual, one per chromosome [h1 and h2]. They are a translation of the ones in the HLA-B.cds.fas. 
  
 HLA-B.prot.counted.fas
+
 A fasta file with one copy of each different protein sequence, their names according to the IPD-IMGT/HLA database, or an indication that they are new, followed by their size and how many times they were detected in your dataset. 
 
 
 HLA-B.db.txt
+
 A tab separated file with the results for all samples. Please ignore the Genomic data if your data does not contain introns. There is also an indication of the size of each sequence.
 
 
 ## STEP 10 - Checking the alleles
-At this step, please check the .db.txt file and evaluate with this data is as you expected. There are too many new alleles, and you did not expect that? Maybe an artifact may be passed the VQSR/vcfx workflow and needs to be manually removed, or something correct didn't pass the filer and must be manually recovered. For instance, if there are many samples with the same new allele, you may inspect the BAM file of one of these samples and the VCF using IGV to detect if there is a problem. If this is the case, you should perform the necessary adjustments and go back to step 5.
+At this step, please check the .db.txt file and evaluate with this data is as you expected. There are too many new alleles, and you did not expect that? Maybe an artifact may be passed the VQSR/vcfx workflow and needs to be manually removed, or something correct didn't pass the filer and must be manually recovered. 
+
+For instance, if there are many samples with the same new allele, you may inspect the BAM file of one of these samples and the VCF using IGV to detect if there is a problem. If this is the case, you should perform the necessary adjustments and go back to step 5.
 
 
-Known issues
-Sometimes there is capture bias for exomes and panels, and some of the chromosomes are not captured or are under-captured. This might lead to genotyping errors beyond this pipeline's scope. This is frequently observed for HLA-DQA1 and HLA-DQB1 and exomes. We have solved this problem with imputation using the data from step 4 (please refer to doi 10.3389/fimmu.2022.975918).
+***Known issues
+
+***Sometimes there is capture bias for exomes and panels, and some of the chromosomes are not captured or are under-captured. This might lead to genotyping errors beyond this pipeline's scope. This is frequently observed for HLA-DQA1 and HLA-DQB1 and exomes. We have solved this problem with imputation using the data from step 4 (please refer to doi 10.3389/fimmu.2022.975918).
 

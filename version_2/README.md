@@ -73,20 +73,25 @@ hla-mapper supports many genes in the MHC region. Please check its website for i
 There are two possible inputs for hla-mapper, a BAM file (step 1A) or FASTQ files (step 1B). Step 1A allows you to get genotypes in intergenic regions, while step 1B focuses only on the HLA genes. Step 1A is also suitable if you already have a BAM file with reads aligned to the hg38 reference genome.
 
 
-## STEP 1A: 
+### STEP 1A: 
 If you already have a BAM file aligned to the human reference genome hg38, you may skip the first part and go directly to the hla-mapper part. 
 Download a copy of the human reference genome (hg38) and prepare it for BWA. We recommend using a reference genome with the "chr" annotation for chromosomes, such as hg38DH used in the 1000Genomes project. All the scripts in this pipeline were designed for a reference genome with "chr6".
 
 
 Prepare it for BWA:
-bwa index reference_genome
+
+> bwa index reference_genome
 
 
 Using BWA MEM, map your reads against the reference genome, and sort it. You should include the sample name with the "-R" option, such as in the following example:
-bwa mem -R '@RG\tID:foo\tSM:foo' reference_genome R1.fastq R2.fastq | samtools sort - > sample.bam
-samtools index sample.bam
+
+> bwa mem -R '@RG\tID:foo\tSM:foo' reference_genome R1.fastq R2.fastq | samtools sort - > sample.bam
+> samtools index sample.bam
+
 Get unbiased alignments with hla-mapper 4. The sample name should be the same as the one used in the previous BWA step, such as:
-hla-mapper dna threads=number_of_threads bam=sample.bam db=hla_mapper_database sample=foo output=output_folder
+
+> hla-mapper dna threads=number_of_threads bam=sample.bam db=hla_mapper_database sample=foo output=output_folder
+
 Repeat this last part for each sample. Please indicate a different output folder for each sample.
 
 

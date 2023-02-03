@@ -141,7 +141,7 @@ Now, you can genotype your GVCF using GATK GenotypeGVCFs. If you used CombineGVF
 There are many ways to proceed with variant refinement, i.e., removing artifacts. Here, we will combine GATK VQSR (better for large sample sizes, WGS and WES) and vcfx (better for small datasets).
 
 Recode the VCF file using vcftools. This is important for the following steps to correct some minor encoding errors sometimes introduced by GATK.
-> vcftools --vcf VCF_FILE --recode --out VCF_FILE_RECODE
+> vcftools --vcf VCF_FILE -keep-INFO-all --recode --out VCF_FILE_RECODE
 
 Use sed to change any "|" allele separator for "/" in VCF file.
 > sed 's/|/\//g' VCF_FILE_RECODE.VCF > VCF_FILE_RECODE_TREATED
